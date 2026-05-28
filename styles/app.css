@@ -1,0 +1,90 @@
+/* ─────────────────────────────────────────────
+   BASE
+   ───────────────────────────────────────────── */
+body {
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+
+.mono {
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+/* ─────────────────────────────────────────────
+   FORM INPUTS
+   ───────────────────────────────────────────── */
+input,
+select,
+textarea {
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+}
+
+/* ─────────────────────────────────────────────
+   SELECT DROPDOWN ARROW
+   ───────────────────────────────────────────── */
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px !important;
+}
+
+select.select-placeholder {
+  color: #94a3b8; /* slate-400, matches placeholder-slate-300 visually */
+}
+
+/* ─────────────────────────────────────────────
+   VALIDATION ERROR STATE
+   ───────────────────────────────────────────── */
+.field-error {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+}
+
+/* ─────────────────────────────────────────────
+   FLATPICKR OVERRIDES
+   ───────────────────────────────────────────── */
+.flatpickr-day.selected,
+.flatpickr-day.selected:hover {
+  background: #1e293b;
+  border-color: #1e293b;
+}
+
+.flatpickr-day:hover {
+  background: #f1f5f9;
+}
+
+.flatpickr-time input:hover,
+.flatpickr-time input:focus,
+.flatpickr-time .flatpickr-am-pm:hover,
+.flatpickr-time .flatpickr-am-pm:focus {
+  background: #f1f5f9;
+}
+
+/* ─────────────────────────────────────────────
+   TEMPLATE CARDS
+   ───────────────────────────────────────────── */
+.template-card {
+  transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* ─────────────────────────────────────────────
+   TOAST
+   ───────────────────────────────────────────── */
+#toast {
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+#toast.visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}

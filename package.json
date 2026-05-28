@@ -1,0 +1,59 @@
+{
+  "name": "bch-template",
+  "version": "1.1.0",
+  "description": "BCH FNNDSC Data Acquisition Template",
+  "author": "FNNDSC BCH",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build:win": "electron-builder --win",
+    "build:linux": "electron-builder --linux",
+    "build:mac": "electron-builder --mac",
+    "build": "electron-builder --win --linux"
+  },
+  "build": {
+    "appId": "com.fnndsc.bchtemplate",
+    "productName": "BCH Template",
+    "files": [
+      "index.html",
+      "main.js",
+      "preload.js",
+      "scripts/**",
+      "styles/**",
+      "images/**"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "build/icon.ico",
+      "artifactName": "${productName} Setup.exe"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "build/icon.png",
+      "artifactName": "${productName}.AppImage"
+    },
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "arm64",
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.icns"
+    },
+    "dmg": {
+      "artifactName": "${productName}-${arch}.dmg"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  },
+  "devDependencies": {
+    "electron": "^42.2.0",
+    "electron-builder": "^26.8.1"
+  }
+}

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BCH Template · FNNDSC New Born</title>
+
+  <!-- Vendor libraries (offline) -->
+  <script src="./scripts/lib/tailwind.js"></script>
+  <link rel="stylesheet" href="./styles/lib/flatpickr.min.css" />
+  <script src="./scripts/lib/flatpickr.min.js"></script>
+
+  <!-- App styles -->
+  <link rel="stylesheet" href="./styles/fonts.css" />
+  <link rel="stylesheet" href="./styles/app.css" />
+</head>
+
+<body class="bg-slate-100 h-screen flex flex-col overflow-hidden">
+
+  <!-- Toast -->
+  <div id="toast" class="fixed top-5 right-5 z-50 opacity-0 pointer-events-none translate-y-[-8px]">
+    <div class="bg-slate-800 text-white text-sm px-5 py-3 rounded-lg flex items-center gap-3 shadow-lg">
+      <svg id="toast-icon" class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+      </svg>
+      <span id="toast-msg"></span>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="shrink-0 bg-white border-b border-slate-200">
+    <div class="px-6 py-3 flex items-center justify-between">
+      <div>
+        <p class="mono text-xs text-slate-400 tracking-widest uppercase mb-0.5">BCH · FNNDSC New Born</p>
+        <h1 class="text-xl font-semibold text-slate-800">Data Acquisition Template</h1>
+      </div>
+      <div class="flex items-center gap-4">
+        <img src="./images/FNNDSC.png" alt="FNNDSC" class="h-12 object-contain">
+        <img src="./images/BCH.png" alt="BCH" class="h-9 object-contain">
+        <img src="./images/Harvard_logo.png" alt="Harvard" class="h-9 object-contain">
+      </div>
+    </div>
+  </header>
+
+  <!-- Main — flex column, owns all remaining height -->
+  <main class="flex-1 min-h-0 flex flex-col px-5 pt-5 overflow-hidden">
+
+    <!-- Template selector -->
+    <section id="template-section" class="shrink-0 mb-5">
+      <p id="template-section-label" class="mono text-sm font-semibold text-slate-400 uppercase tracking-widest mb-4">Templates</p>
+      <div id="template-selector" class="flex flex-wrap gap-3"></div>
+    </section>
+
+    <!-- Divider, shown after template is picked -->
+    <div id="form-divider" class="shrink-0 hidden border-t border-slate-200 mb-4"></div>
+
+    <!-- Empty state -->
+    <div id="empty-state" class="flex-1 flex flex-col items-center justify-center text-center">
+      <div class="w-14 h-14 bg-slate-200 rounded-2xl flex items-center justify-center mb-4">
+        <svg class="w-7 h-7 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"
+            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+        </svg>
+      </div>
+      <p class="text-sm font-medium text-slate-600">Select a template to begin</p>
+      <p class="text-xs text-slate-400 mt-1">Choose a template type above to load the form</p>
+    </div>
+
+    <!-- Single-column form layout -->
+    <div id="form-layout" class="hidden flex-1 overflow-y-auto min-h-0">
+      <div id="form-panel" class="space-y-4 pb-4 max-w-3xl mx-auto w-full"></div>
+    </div>
+
+  </main>
+
+  <!-- Config: shared sections first, then each template, then the index that assembles TEMPLATES -->
+  <script src="./scripts/config/shared.js"></script>
+  <script src="./scripts/config/pda.js"></script>
+  <script src="./scripts/config/pbi.js"></script>
+  <script src="./scripts/config/scd.js"></script>
+  <script src="./scripts/config/icp.js"></script>
+  <script src="./scripts/config/hydrocephalus.js"></script>
+  <script src="./scripts/config/index.js"></script>
+  <script src="./scripts/state.js"></script>
+  <script src="./scripts/utils.js"></script>
+  <script src="./scripts/render.js"></script>
+  <script src="./scripts/calibration.js"></script>
+  <script src="./scripts/notes.js"></script>
+  <script src="./scripts/section_types.js"></script>
+  <script src="./scripts/icp.js"></script>
+  <script src="./scripts/export.js"></script>
+  <script src="./scripts/app.js"></script>
+</body>
+</html>
