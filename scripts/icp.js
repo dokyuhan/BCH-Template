@@ -212,6 +212,7 @@ function deleteIcpVentRow(type, gIdx, rIdx) {
 function addIcpNote() {
   const idx  = ++icpState.noteCounter
   icpState.notes.push(idx)
+  const now  = icpNow()
   const inp  = INP_SM
   const html = `<div id="icp_note_${idx}" class="grid gap-2 mt-2 items-center" style="grid-template-columns: 160px 1fr 24px">
     <input type="text" id="icp_note_${idx}_time"    placeholder="HH:MM:SS" class="${inp} cursor-pointer">
@@ -222,6 +223,7 @@ function addIcpNote() {
   flatpickr(document.getElementById(`icp_note_${idx}_time`), {
     noCalendar: true, enableTime: true, enableSeconds: true,
     time_24hr: true, dateFormat: 'H:i:S', allowInput: false,
+    defaultDate: now,
   })
 }
 

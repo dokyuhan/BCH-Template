@@ -33,7 +33,17 @@ function buildStagesTableCard(section, tmpl) {
         <td class="py-2 pr-3 text-sm text-slate-700 whitespace-nowrap">${row.label}</td>
         <td class="py-2 pr-2"><input type="text" data-timepicker="time" id="${section.id}_${row.id}_start" placeholder="HH:MM:SS" class="${inp} cursor-pointer"></td>
         <td class="py-2 pr-2"><input type="text" data-timepicker="time" id="${section.id}_${row.id}_end"   placeholder="HH:MM:SS" class="${inp} cursor-pointer"></td>
-        <td class="py-2">    <input type="text"           id="${section.id}_${row.id}_comment" class="${inp}"></td>
+        <td class="py-2 pr-2"><input type="text" id="${section.id}_${row.id}_comment" class="${inp}"></td>
+        <td class="py-2">
+          <button type="button" onclick="scdStagesRecord('${section.id}', '${row.id}')"
+            title="Record current time"
+            class="flex items-center gap-1 text-xs text-slate-400 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 px-2 py-1 rounded transition-colors whitespace-nowrap">
+            <svg class="w-3 h-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            Rec
+          </button>
+        </td>
       </tr>`
     }
     if (row.type === 'breathing') {
@@ -47,7 +57,8 @@ function buildStagesTableCard(section, tmpl) {
             Rec. done
           </label>
         </td>
-        <td class="py-2"><input type="text" id="${section.id}_${row.id}_comment" class="${inp}"></td>
+        <td class="py-2 pr-2"><input type="text" id="${section.id}_${row.id}_comment" class="${inp}"></td>
+        <td class="py-2"></td>
       </tr>`
     }
     return ''
@@ -57,6 +68,12 @@ function buildStagesTableCard(section, tmpl) {
     <div class="flex items-center gap-2.5 mb-4">
       <span class="text-slate-400">${section.icon}</span>
       <h2 class="text-xs font-semibold text-slate-600 uppercase tracking-wider mono">${section.title}</h2>
+      <div class="ml-auto flex items-center gap-2">
+        <span class="text-xs text-slate-400 mono uppercase tracking-wider">Interval</span>
+        <input type="number" id="${section.id}_interval" min="0" value="300"
+          class="w-20 text-sm text-slate-800 bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 text-center">
+        <span class="text-xs text-slate-400">sec</span>
+      </div>
     </div>
     <div class="overflow-x-auto">
       <table class="w-full text-sm" style="border-collapse:collapse">
@@ -65,6 +82,7 @@ function buildStagesTableCard(section, tmpl) {
           <col style="width:120px">
           <col style="width:140px">
           <col>
+          <col style="width:60px">
         </colgroup>
         <thead>
           <tr>
@@ -72,12 +90,48 @@ function buildStagesTableCard(section, tmpl) {
             <th class="text-left text-xs font-semibold text-slate-400 mono uppercase tracking-wider pb-2 pr-2"> Start </th>
             <th class="text-left text-xs font-semibold text-slate-400 mono uppercase tracking-wider pb-2 pr-2"> End </th>
             <th class="text-left text-xs font-semibold text-slate-400 mono uppercase tracking-wider pb-2"> Comment </th>
+            <th></th>
           </tr>
         </thead>
         <tbody>${rows}</tbody>
       </table>
     </div>
   </div>`
+}
+
+// ─────────────────────────────────────────────
+//  STAGES TABLE — TIME RECORD HELPERS
+// ─────────────────────────────────────────────
+function scdStagesNow() {
+  const now = new Date()
+  const pad = n => String(n).padStart(2, '0')
+  return `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`
+}
+
+function scdStagesCalcEnd(startStr, sectionId) {
+  const secs = parseInt(document.getElementById(`${sectionId}_interval`)?.value || '30', 10)
+  if (!secs || !startStr) return ''
+  const parts = startStr.split(':').map(Number)
+  if (parts.length !== 3 || parts.some(isNaN)) return ''
+  const [h, m, s] = parts
+  const total = h * 3600 + m * 60 + s + secs
+  const pad   = n => String(n).padStart(2, '0')
+  return `${pad(Math.floor(total / 3600) % 24)}:${pad(Math.floor((total % 3600) / 60))}:${pad(total % 60)}`
+}
+
+function scdStagesRecord(sectionId, rowId) {
+  const start   = scdStagesNow()
+  const end     = scdStagesCalcEnd(start, sectionId)
+  const startEl = document.getElementById(`${sectionId}_${rowId}_start`)
+  const endEl   = document.getElementById(`${sectionId}_${rowId}_end`)
+  if (startEl) {
+    const fp = startEl._flatpickr
+    fp ? fp.setDate(start, false) : (startEl.value = start)
+  }
+  if (end && endEl) {
+    const fp = endEl._flatpickr
+    fp ? fp.setDate(end, false) : (endEl.value = end)
+  }
 }
 
 // ─────────────────────────────────────────────

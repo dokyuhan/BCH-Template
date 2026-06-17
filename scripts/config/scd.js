@@ -52,6 +52,7 @@ const SCD_CONFIG = {
         { id: "breathing_2", label: "Breathing Exercise 2", type: "breathing"  },
         { id: "breathing_3", label: "Breathing Exercise 3", type: "breathing"  },
         { id: "sitting_2",   label: "Sitting",              type: "time_range" },
+        { id: "standing_2",  label: "Standing",             type: "time_range" },
       ]
     },
     {

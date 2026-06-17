@@ -257,7 +257,7 @@ function buildBlockRow(idx, gainIdx, gainPos, calLoc, posInLoc) {
     ...['A','B','C','D'].map(ch =>
       chLbl(`cal_block_${idx}_ch_${ch.toLowerCase()}`, ch, `onChannelChange('cal_block_${idx}_ch')`))
   ].join('')
-  const tgOpts = ['Tegaderm','No Tegaderm'].map(o =>
+  const tgOpts = ['Tegaderm','No Tegaderm', 'Tegaderm + Reflector'].map(o =>
     `<option value="${o}"${o === calBlockTegadermDefault ? ' selected' : ''}>${o}</option>`
   ).join('')
   return `<div id="cal_block_row_${idx}" class="flex items-center gap-2 flex-wrap mb-1.5">
