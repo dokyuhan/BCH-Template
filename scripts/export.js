@@ -252,13 +252,15 @@ function exportTxt(silent = false) {
               .filter(ch => document.getElementById(`cal_block_${idx}_ch_${ch.toLowerCase()}`)?.checked)
               .join(', ')
             const note  = document.getElementById(`cal_block_${idx}_note`)?.value.trim() || ''
-            const tgStr = tegaderm === 'Tegaderm' ? ', Tegaderm' : ''
+            const tgStr = (tegaderm && tegaderm !== 'No Tegaderm') ? `, ${tegaderm}` : ''
             lines.push(`    ${calLoc}_${posInLoc + 1} - ${shape}${tgStr}, ${filter} ND, Ch: ${channels || '—'}${note ? ` [${note}]` : ''}`)
           })
         })
       })
     } else {
+      const currentCohort = document.getElementById('cohort')?.value
       flattenFields(section.fields).forEach(field => {
+        if (field.cohortOnly && field.cohortOnly !== currentCohort) return
         if (field.type === 'textarea') {
           const raw = document.getElementById(field.id)?.value || ''
           const tLines = raw.trim() ? raw.split('\n') : ['—']
@@ -356,7 +358,7 @@ function exportJson() {
               gain_values:  gainValues,
               cal_location: calLoc,
               shape:        document.getElementById(`cal_block_${idx}_shape`)?.value || null,
-              tegaderm:     tegadermRaw === 'Tegaderm' ? true : (tegadermRaw === 'No Tegaderm' ? false : null),
+              tegaderm:     tegadermRaw || null,
               filter_nd:    filterRaw && filterRaw !== 'No filter' ? parseFloatOrNull(filterRaw) : null,
               channels:     ['A','B','C','D'].filter(ch =>
                 document.getElementById(`cal_block_${idx}_ch_${ch.toLowerCase()}`)?.checked
@@ -463,7 +465,9 @@ function exportJson() {
 
     } else {
       output[section.id] = {}
+      const currentCohort = document.getElementById('cohort')?.value
       flattenFields(section.fields).forEach(field => {
+        if (field.cohortOnly && field.cohortOnly !== currentCohort) return
         if (field.type === 'datetime') {
           const raw = document.getElementById(field.id)?.value.trim()
           output[section.id][field.id + '_utc'] = getFieldJsonValue(field)

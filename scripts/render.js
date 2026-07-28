@@ -181,7 +181,10 @@ function buildField(field, { noLabel = false } = {}) {
       ? `<p class="text-xs font-semibold text-slate-500 mb-1.5 mono uppercase tracking-wide">${field.label}${requiredMark}</p>`
       : ''
     const childNoLabel = !field.labeled
-    return `<div>
+    const cohortAttrs  = field.cohortOnly
+      ? ` data-cohort-only="${field.cohortOnly}" style="display:none"`
+      : ''
+    return `<div${cohortAttrs}>
       ${groupLabel}
       <div class="grid grid-cols-${field.cols || 2} gap-3">
         ${field.fields.map(f => buildField(f, { noLabel: childNoLabel })).join('')}

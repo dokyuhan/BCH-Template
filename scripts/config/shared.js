@@ -101,6 +101,13 @@ const SHARED_SECTIONS = [
         ]
       },
       { id: "session_notes", label: "Notes", type: "textarea", rows: 3, required: false, placeholder: "Additional notes..." },
+      {
+        type: "group", cols: 2, labeled: true, cohortOnly: "SCD Gene Therapy",
+        fields: [
+          { id: "scd_pre_bp",  label: "Pre BP",  type: "text", required: false, cohortOnly: "SCD Gene Therapy" },
+          { id: "scd_post_bp", label: "Post BP", type: "text", required: false, cohortOnly: "SCD Gene Therapy" },
+        ]
+      },
     ]
   },
 

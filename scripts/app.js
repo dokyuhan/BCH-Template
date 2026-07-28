@@ -194,6 +194,10 @@ function onCohortChange(value) {
     card.style.display = visibleIds.includes(card.dataset.sectionId) ? '' : 'none'
   })
 
+  document.querySelectorAll('#form-panel [data-cohort-only]').forEach(el => {
+    el.style.display = el.dataset.cohortOnly === value ? '' : 'none'
+  })
+
   const isPdf = visibleIds.some(id => {
     const allSects = buildSections(tmpl)
     return allSects.find(s => s.id === id)?.type === 'notes_table'
