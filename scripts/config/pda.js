@@ -26,12 +26,13 @@ const PDA_CONFIG = {
              </svg>`,
       fields: [
         {
-          type: "group", cols: 2, labeled: true,
+          type: "group", cols: 3, labeled: true,
           fields: [
-            { id: "hair_color",  label: "Hair Color",  type: "select", required: false,
+            { id: "hair_color",  label: "Hair Color",  type: "select", required: true, gatedBy: "no_hair", gateInvert: true,
               options: ["-- Select --", "Brown", "Blonde", "White", "Black", "Red"] },
-            { id: "hair_amount", label: "Hair Amount", type: "select", required: false,
-              options: ["-- Select --", "None", "Minimal", "Moderate", "Excessive"] },
+            { id: "hair_amount", label: "Hair Amount", type: "select", required: true, gatedBy: "no_hair", gateInvert: true,
+              options: ["-- Select --", "Minimal", "Moderate", "Excessive"] },
+            { id: "no_hair", label: "No Hair", type: "toggle", defaultChecked: true },
           ]
         },
       ]

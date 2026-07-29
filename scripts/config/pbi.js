@@ -26,15 +26,8 @@ const PBI_CONFIG = {
                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
              </svg>`,
       fields: [
-        {
-          type: "group", cols: 2, labeled: true,
-          fields: [
-            { id: "encephalopathy_score", label: "Encephalopathy Score", type: "select", required: true,
-              options: ["-- Select --", "1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21"] },
-            { id: "th_phase", label: "Therapeutic Hypothermia Phase", type: "select", required: true,
-              options: ["-- Select --", "C1", "C2", "C3", "RW", "NT"] },
-          ]
-        },
+        { id: "th_phase", label: "Therapeutic Hypothermia Phase", type: "select", required: true,
+          options: ["-- Select --", "C1", "C2", "C3", "RW", "NT"] },
         {
           type: "group", cols: 2, labeled: true,
           fields: [

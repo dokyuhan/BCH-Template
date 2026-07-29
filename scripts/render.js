@@ -192,6 +192,30 @@ function buildField(field, { noLabel = false } = {}) {
     </div>`
   }
 
+  // ── Room-style: checkbox next to the label, input below ──
+  if (field.availableToggle) {
+    const requiredMark = field.required
+      ? `<span class="text-red-400 ml-0.5">*</span>`
+      : ''
+    return `<div data-field="${field.id}">
+      <div class="flex items-center justify-between mb-1.5">
+        <label for="${field.id}" class="text-xs font-semibold text-slate-500 mono uppercase tracking-wide">
+          ${field.label}${requiredMark}
+        </label>
+        <label class="flex items-center gap-1 text-[11px] text-slate-500 whitespace-nowrap cursor-pointer select-none">
+          <input type="checkbox" id="${field.id}_available"
+            onchange="onRoomAvailableChange(this)"
+            class="w-3.5 h-3.5 rounded border-slate-300 cursor-pointer accent-slate-800" />
+          Available
+        </label>
+      </div>
+      <input type="text" id="${field.id}" value="N/A" disabled
+        inputmode="numeric" placeholder="e.g. 12"
+        oninput="this.value=this.value.replace(/[^0-9]/g,'')"
+        class="${INP} opacity-50" />
+    </div>`
+  }
+
   // ── Label ──
   const requiredMark = field.required
     ? `<span class="text-red-400 ml-0.5">*</span>`
@@ -209,13 +233,21 @@ function buildField(field, { noLabel = false } = {}) {
 
   // ── Input ──
   let input
-  if (field.type === 'select') {
+  if (field.type === 'toggle') {
+    input = `<div class="flex items-center h-[42px]">
+      <input type="checkbox" id="${field.id}" onchange="onGateToggleChange(this)"
+        ${field.defaultChecked ? 'checked' : ''}
+        class="w-4 h-4 rounded border-slate-300 cursor-pointer accent-slate-800" />
+    </div>`
+  } else if (field.type === 'select') {
     const rawList = field.optionsFrom
       ? (TEMPLATES[currentTemplate]?.[field.optionsFrom] || [])
       : field.options.slice(1)
     const placeholder = field.optionsFrom ? '-- Select --' : field.options[0]
+    const naOption = field.gatedBy ? `<option value="N/A" selected>N/A</option>` : ''
     const opts = `<option value="">${placeholder}</option>` +
-      rawList.map(o => `<option value="${o}" ${field.defaultValue === o ? 'selected' : ''}>${o}</option>`).join('')
+      rawList.map(o => `<option value="${o}" ${field.defaultValue === o ? 'selected' : ''}>${o}</option>`).join('') +
+      naOption
     const otherId    = `${field.id}_other`
     const triggerVal = field.allowOther ? 'Other' : (field.revealOn || null)
     const handlers   = []
@@ -230,7 +262,11 @@ function buildField(field, { noLabel = false } = {}) {
           : `<input type="text" id="${otherId}" placeholder="${field.revealPlaceholder || 'Please specify...'}"
                class="${base} mt-2 hidden" />`)
       : ''
-    input = `<select id="${field.id}" class="${base} select-placeholder" ${field.required ? 'required' : ''} ${onChange}>${opts}</select>${extraInput}`
+    const gatedAttrs = field.gatedBy
+      ? ` data-gated-by="${field.gatedBy}"${field.gateInvert ? ' data-gate-invert="true"' : ''} disabled`
+      : ''
+    const gatedClass = field.gatedBy ? ' opacity-50' : ''
+    input = `<select id="${field.id}" class="${base} select-placeholder${gatedClass}" ${field.required ? 'required' : ''} ${onChange}${gatedAttrs}>${opts}</select>${extraInput}`
   } else if (field.type === 'textarea') {
     input = `<textarea id="${field.id}" rows="${field.rows || 3}" placeholder="${field.placeholder || ''}"
                class="${base} resize-none" ${field.required ? 'required' : ''}></textarea>`

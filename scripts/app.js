@@ -68,14 +68,31 @@ function restoreFormSnapshot(key) {
     })
   })
 
-  const roomSnap = snap.inputs['room']
-  if (roomSnap) {
-    const roomEl = document.getElementById('room')
-    if (roomEl && roomEl.value !== roomSnap) {
-      roomEl.value = roomSnap
-      if (roomEl.tagName === 'SELECT') syncSelectStyle(roomEl)
-    }
+  const roomEl      = document.getElementById('room')
+  const roomAvailEl = document.getElementById('room_available')
+  if (roomEl && roomAvailEl) {
+    roomEl.disabled      = !roomAvailEl.checked
+    roomEl.style.opacity = roomAvailEl.checked ? '' : '0.5'
   }
+
+  document.querySelectorAll('[data-gated-by]').forEach(el => {
+    const gate = document.getElementById(el.dataset.gatedBy)
+    if (!gate) return
+    const enabled = el.dataset.gateInvert === 'true' ? !gate.checked : gate.checked
+    el.disabled      = !enabled
+    el.style.opacity = enabled ? '' : '0.5'
+    if (el.tagName === 'SELECT') {
+      const naOpt        = el.querySelector('option[value="N/A"]')
+      const restoredValue = el.value
+      if (enabled) {
+        naOpt?.remove()
+      } else if (!naOpt) {
+        el.insertAdjacentHTML('beforeend', '<option value="N/A">N/A</option>')
+      }
+      el.value = restoredValue
+      syncSelectStyle(el)
+    }
+  })
 
   restoringSnapshot = false
 }
@@ -144,6 +161,7 @@ function validateForm() {
       if (!field.required) return
       const el = document.getElementById(field.id)
       if (!el) return
+      if (el.disabled) return
       const isEmpty = !el.value.trim() || (el.tagName === 'SELECT' && el.value === '')
       if (isEmpty) {
         el.classList.add('field-error')
@@ -221,42 +239,60 @@ function onExportClick() {
 }
 
 // ─────────────────────────────────────────────
-//  BUILDING → ROOM CONDITIONAL
+//  ROOM AVAILABILITY TOGGLE
 // ─────────────────────────────────────────────
-function onBuildingChange(value) {
-  const base    = INP
-  const current = document.getElementById('room')
-  if (!current) return
-  const isHale6         = value === 'Hale 6 (Cathlab)'
-  const isMegLab        = value === 'MegLAB'
-  const isCurrentSelect = current.tagName === 'SELECT'
-
-  if (isHale6 && !isCurrentSelect) {
-    const sel = document.createElement('select')
-    sel.id        = 'room'
-    sel.required  = true
-    sel.className = `${base} select-placeholder`
-    sel.innerHTML = '<option value="">-- Select --</option><option value="A">A</option><option value="B">B</option><option value="C">C</option>'
-    sel.addEventListener('change', () => syncSelectStyle(sel))
-    current.replaceWith(sel)
-  } else if (!isHale6 && isCurrentSelect) {
-    const inp      = document.createElement('input')
-    inp.type      = 'text'
-    inp.id        = 'room'
-    inp.required  = true
-    inp.className = base
-    current.replaceWith(inp)
-  }
-
+function onRoomAvailableChange(checkbox) {
   const roomEl = document.getElementById('room')
-  if (isMegLab) {
-    roomEl.value         = 'N/A'
-    roomEl.disabled      = true
-    roomEl.style.opacity = '0.5'
-  } else if (roomEl.disabled) {
-    roomEl.value         = ''
+  if (!roomEl) return
+  if (checkbox.checked) {
     roomEl.disabled      = false
     roomEl.style.opacity = ''
+    roomEl.value         = ''
+  } else {
+    roomEl.disabled      = true
+    roomEl.style.opacity = '0.5'
+    roomEl.value         = 'N/A'
+  }
+}
+
+// ─────────────────────────────────────────────
+//  GENERIC CHECKBOX-GATED FIELDS (e.g. Hair)
+// ─────────────────────────────────────────────
+function onGateToggleChange(checkbox) {
+  document.querySelectorAll(`[data-gated-by="${checkbox.id}"]`).forEach(el => {
+    const enabled = el.dataset.gateInvert === 'true' ? !checkbox.checked : checkbox.checked
+    el.disabled      = !enabled
+    el.style.opacity = enabled ? '' : '0.5'
+    if (el.tagName === 'SELECT') {
+      let naOpt = el.querySelector('option[value="N/A"]')
+      if (enabled) {
+        naOpt?.remove()
+        el.value = ''
+      } else {
+        if (!naOpt) el.insertAdjacentHTML('beforeend', '<option value="N/A">N/A</option>')
+        el.value = 'N/A'
+      }
+      syncSelectStyle(el)
+    } else {
+      el.value = enabled ? '' : 'N/A'
+    }
+  })
+}
+
+// ─────────────────────────────────────────────
+//  BUILDING → ROOM (MegLAB has no room; force N/A)
+// ─────────────────────────────────────────────
+function onBuildingChange(value) {
+  const roomAvailEl = document.getElementById('room_available')
+  if (!roomAvailEl) return
+  const isMegLab = value === 'MegLAB'
+
+  if (isMegLab) {
+    roomAvailEl.checked  = false
+    roomAvailEl.disabled = true
+    onRoomAvailableChange(roomAvailEl)
+  } else if (roomAvailEl.disabled) {
+    roomAvailEl.disabled = false
   }
 }
 

@@ -1,7 +1,13 @@
 // ─────────────────────────────────────────────
 //  FIELD VALUE HELPERS
 // ─────────────────────────────────────────────
+function isFieldGateEnabled(field) {
+  const checked = document.getElementById(field.gatedBy)?.checked
+  return field.gateInvert ? !checked : checked
+}
+
 function getFieldExportValue(field) {
+  if (field.gatedBy && !isFieldGateEnabled(field)) return 'N/A'
   if (field.type === 'date') {
     return toIsoDate(document.getElementById(field.id)?.value.trim()) || '—'
   }
@@ -42,6 +48,7 @@ function getFieldExportValue(field) {
 }
 
 function getFieldJsonValue(field) {
+  if (field.gatedBy && !isFieldGateEnabled(field)) return 'N/A'
   if (field.type === 'power_measurement') {
     const raw_v = document.getElementById(`${field.id}_value`)?.value.trim()   || ''
     const raw_c = document.getElementById(`${field.id}_current`)?.value.trim() || ''
@@ -261,6 +268,7 @@ function exportTxt(silent = false) {
       const currentCohort = document.getElementById('cohort')?.value
       flattenFields(section.fields).forEach(field => {
         if (field.cohortOnly && field.cohortOnly !== currentCohort) return
+        if (field.type === 'toggle') return
         if (field.type === 'textarea') {
           const raw = document.getElementById(field.id)?.value || ''
           const tLines = raw.trim() ? raw.split('\n') : ['—']
@@ -468,6 +476,7 @@ function exportJson() {
       const currentCohort = document.getElementById('cohort')?.value
       flattenFields(section.fields).forEach(field => {
         if (field.cohortOnly && field.cohortOnly !== currentCohort) return
+        if (field.type === 'toggle') return
         if (field.type === 'datetime') {
           const raw = document.getElementById(field.id)?.value.trim()
           output[section.id][field.id + '_utc'] = getFieldJsonValue(field)

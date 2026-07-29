@@ -29,7 +29,7 @@ const SHARED_SECTIONS = [
             onChange: "onBuildingChange",
             options: ["-- Select --", "Hale 11 (NICU)", "Hale 6 (Cathlab)", "Hale 3 (OR)", "Main 3 (OR)", "MegLAB", "Other"]
           },
-          { id: "room", label: "Room", type: "text", required: true },
+          { id: "room", label: "Room", type: "text", required: false, availableToggle: true },
         ]
       },
       {
@@ -94,9 +94,9 @@ const SHARED_SECTIONS = [
           { id: "vent", label: "Vent", type: "select", required: false,
             revealOn: "True", revealPlaceholder: "Specify vent type...",
             options: ["-- Select --", "True", "False"] },
-          { id: "room_light", label: "Room Light", type: "select", required: false,
+          { id: "room_light", label: "Room Light", type: "select", required: true,
             options: ["-- Select --", "Off", "Low", "Normal", "Bright"] },
-          { id: "tegaderm", label: "Tegaderm", type: "select", required: false,
+          { id: "tegaderm", label: "Tegaderm", type: "select", required: true,
             options: ["-- Select --", "True", "False"] },
         ]
       },
