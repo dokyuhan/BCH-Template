@@ -28,18 +28,6 @@ const PBI_CONFIG = {
       fields: [
         { id: "th_phase", label: "Therapeutic Hypothermia Phase", type: "select", required: true,
           options: ["-- Select --", "C1", "C2", "C3", "RW", "NT"] },
-        {
-          type: "group", cols: 2, labeled: true,
-          fields: [
-            { id: "eeg",      label: "EEG",      type: "select", required: true,
-              options: ["-- Select --", "True", "False"] },
-            { id: "seizures", label: "Seizures", type: "select", required: true,
-              options: ["-- Select --", "True", "False"] },
-          ]
-        },
-        { id: "seizure_medication", label: "Seizures/Antibiotics Medication", type: "select", required: false,
-          revealOn: "True", revealPlaceholder: "Specify medication...", revealRows: 2,
-          options: ["-- Select --", "True", "False"] },
       ]
     },
   ]
