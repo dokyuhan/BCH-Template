@@ -19,6 +19,7 @@ function getFieldExportValue(field) {
     return utc ? `${utc} UTC  (ET: ${et})` : (et || '—')
   }
   if (field.type === 'power_measurement') {
+    if (field.naToggle && document.getElementById(`${field.id}_na`)?.checked) return 'N/A'
     const val = document.getElementById(`${field.id}_value`)?.value.trim()
     const cur = document.getElementById(`${field.id}_current`)?.value.trim()
     if (!val && !cur) return '—'
@@ -50,6 +51,9 @@ function getFieldExportValue(field) {
 function getFieldJsonValue(field) {
   if (field.gatedBy && !isFieldGateEnabled(field)) return 'N/A'
   if (field.type === 'power_measurement') {
+    if (field.naToggle && document.getElementById(`${field.id}_na`)?.checked) {
+      return { value_mw: 'N/A', current_a: 'N/A' }
+    }
     const raw_v = document.getElementById(`${field.id}_value`)?.value.trim()   || ''
     const raw_c = document.getElementById(`${field.id}_current`)?.value.trim() || ''
     return {

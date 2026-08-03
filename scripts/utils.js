@@ -32,14 +32,14 @@ function esc(str) {
 
 function toIsoDate(val) {
   if (!val) return null
-  const [d, m, y] = val.split('-')
+  const [m, d, y] = val.split('-')
   return `${y.slice(-2)}:${m}:${d}`
 }
 
 function toIsoDateTime(val) {
   if (!val) return null
   const [date, time] = val.split(' ')
-  const [d, m, y] = date.split('-')
+  const [m, d, y] = date.split('-')
   return `${y}-${m}-${d} ${time}`
 }
 
@@ -47,7 +47,7 @@ function toUtcDateTime(val) {
   if (!val) return null
   const [date, time] = val.split(' ')
   if (!date || !time) return null
-  const [d, m, y] = date.split('-')
+  const [m, d, y] = date.split('-')
   const [h, min, s] = time.split(':')
   const local = new Date(+y, +m - 1, +d, +h, +min, +(s || 0))
   if (isNaN(local.getTime())) return null
@@ -72,7 +72,7 @@ let _batchQueue = null
 
 function fmtFilenameDate(val) {
   if (!val) return 'nodate'
-  const [d, m, y] = val.split('-')
+  const [m, d, y] = val.split('-')
   return (m && d && y) ? `${m}-${d}-${y.slice(-2)}` : val
 }
 

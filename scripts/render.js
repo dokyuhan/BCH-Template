@@ -223,11 +223,21 @@ function buildField(field, { noLabel = false } = {}) {
   const hintBadge = field.hint
     ? ` <span class="normal-case font-normal tracking-normal text-slate-400">(${field.hint})</span>`
     : ''
-  const label = noLabel ? '' : `
+  const label = noLabel ? '' : (field.naToggle ? `
+    <div class="flex items-center justify-between mb-1.5">
+      <label class="text-xs font-semibold text-slate-500 mono uppercase tracking-wide">
+        ${field.label}${hintBadge}${requiredMark}
+      </label>
+      <label class="flex items-center gap-1 text-[11px] text-slate-500 whitespace-nowrap cursor-pointer select-none">
+        <input type="checkbox" id="${field.id}_na" onchange="onGateToggleChange(this)"
+          class="w-3.5 h-3.5 rounded border-slate-300 cursor-pointer accent-slate-800" />
+        N/A
+      </label>
+    </div>` : `
     <label for="${field.id}"
       class="block text-xs font-semibold text-slate-500 mb-1.5 mono uppercase tracking-wide">
       ${field.label}${hintBadge}${requiredMark}
-    </label>`
+    </label>`)
 
   const base = INP
 
@@ -273,7 +283,7 @@ function buildField(field, { noLabel = false } = {}) {
   } else if (field.type === 'date') {
     input = `<input type="text" id="${field.id}" data-timepicker="date"
                class="${base} cursor-pointer" ${field.required ? 'required' : ''}
-               placeholder="DD-MM-YYYY" />`
+               placeholder="MM-DD-YYYY" />`
   } else if (field.type === 'time') {
     input = `<input type="text" id="${field.id}" data-timepicker="time"
                class="${base} cursor-pointer" ${field.required ? 'required' : ''}
@@ -281,13 +291,14 @@ function buildField(field, { noLabel = false } = {}) {
   } else if (field.type === 'datetime') {
     input = `<input type="text" id="${field.id}" data-timepicker="datetime"
                class="${base} cursor-pointer" ${field.required ? 'required' : ''}
-               placeholder="DD-MM-YYYY HH:MM:SS" />`
+               placeholder="MM-DD-YYYY HH:MM:SS" />`
   } else if (field.type === 'power_measurement') {
     const sm = "text-sm text-slate-800 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2.5 placeholder-slate-300 w-24"
+    const gatedAttrs = field.naToggle ? ` data-gated-by="${field.id}_na" data-gate-invert="true"` : ''
     input = `<div class="flex items-center gap-2">
-      <input type="text" id="${field.id}_value"   placeholder="0.000" class="${sm}" />
+      <input type="text" id="${field.id}_value"   placeholder="0.000" class="${sm}"${gatedAttrs} />
       <span class="text-sm text-slate-400 whitespace-nowrap">mW @</span>
-      <input type="text" id="${field.id}_current" placeholder="0.000" class="${sm}" />
+      <input type="text" id="${field.id}_current" placeholder="0.000" class="${sm}"${gatedAttrs} />
       <span class="text-sm text-slate-400">A</span>
     </div>`
   } else if (field.type === 'multiselect') {
@@ -432,7 +443,7 @@ function initTimePickers() {
     const opts = {
       enableTime:    isDatetime || isTime,
       noCalendar:    isTime,
-      dateFormat:    isDatetime ? 'd-m-Y H:i:S' : (isDate ? 'd-m-Y' : 'H:i:S'),
+      dateFormat:    isDatetime ? 'm-d-Y H:i:S' : (isDate ? 'm-d-Y' : 'H:i:S'),
       time_24hr:     true,
       enableSeconds: isDatetime || isTime,
       allowInput:    false,

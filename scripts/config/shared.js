@@ -1,4 +1,27 @@
 // ─────────────────────────────────────────────
+//  STAFF NAMES
+//  Used by Probe Holder / Computer Tech dropdowns.
+// ─────────────────────────────────────────────
+const STAFF_NAMES = [
+  "German Figueroa",
+  "Elena Dominguez",
+  "Ivy Lin",
+  "Jason Sutin",
+  "Yasmin Cerqueira",
+  "Alissar Dalloul",
+  "Harumy Yoshikawa",
+  "Luiz Tojal",
+  "Michael Woglom",
+  "Taylor Vadset",
+  "Jessica Sims",
+  "Rachel Lipman",
+  "Shoshana Freeman",
+  "Ajay Rajaram",
+  "Rutvi Vyas",
+  "Kat Playter",
+]
+
+// ─────────────────────────────────────────────
 //  SHARED SECTIONS
 //  Appear in every template. Order here = order in form.
 // ─────────────────────────────────────────────
@@ -39,8 +62,10 @@ const SHARED_SECTIONS = [
           { id: "meas_end",   label: "Measurement End",   type: "datetime", required: false, hint: "ET" },
         ]
       },
-      { id: "probe_holder",  label: "Probe Holder",  type: "text", required: true },
-      { id: "computer_tech", label: "Computer Tech", type: "text", required: true },
+      { id: "probe_holder", label: "Probe Holder", type: "select", required: true, allowOther: true,
+        options: ["-- Select --", ...STAFF_NAMES, "Other"] },
+      { id: "computer_tech", label: "Computer Tech", type: "select", required: true, allowOther: true,
+        options: ["-- Select --", ...STAFF_NAMES, "Other"] },
     ]
   },
 
@@ -59,15 +84,15 @@ const SHARED_SECTIONS = [
             defaultValue: "MetaOx1",
             options: ["-- Select --", "MetaOx", "MetaOx1"] },
           { id: "probe_type", label: "Probe Type", type: "select", required: true,
-            options: ["-- Select --", "NICUCM1", "NB5", "TLCM1", "PEDSCM1"],
+            options: ["-- Select --", "NICUCM1", "NICUCM2", "NB4", "NB5", "TLCM1", "PEDSCM1", "SCD Probe V1", "SCD Probe V3", "IP Probe", "IP Probe V2"],
             onChange: "onProbeTypeChange" },
         ]
       },
       {
         type: "group", cols: 2, labeled: true,
         fields: [
-          { id: "power_before", label: "Power Before", type: "power_measurement", required: true },
-          { id: "power_after",  label: "Power After",  type: "power_measurement", required: true },
+          { id: "power_before", label: "Power Before", type: "power_measurement", required: false, naToggle: true },
+          { id: "power_after",  label: "Power After",  type: "power_measurement", required: false, naToggle: true },
         ]
       },
       {
@@ -131,7 +156,13 @@ const SHARED_SECTIONS = [
 // ─────────────────────────────────────────────
 const PROBE_DISTANCES = {
   "NICUCM1": { nirs: [1.5, 2, 2.5, 3],    dcs: [0.5, 2, 2, 2, 2, 2, 2, 2] },
+  "NICUCM2": { nirs: [1.5, 2, 2.5, 3],    dcs: [0.5, 2, 2, 2, 2, 2, 2, 2] },
+  "NB4":     { nirs: [1.5, 2, 2.5, 3],    dcs: [0.5, 2, 2, 2, 2, 2, 2, 2] },
   "NB5":     { nirs: [1.5, 2, 2.5, 3],    dcs: [0.5, 2, 2, 2, 2, 2, 2, 2] },
   "TLCM1":   { nirs: [1, 1.5, 3, 4],      dcs: [1, 3, 3, 3, 3, 3, 3, 3]   },
   "PEDSCM1": { nirs: [1, 1.5, 2.5, 3.5],  dcs: [1, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5] },
+  "SCD Probe V1": { nirs: [1, 2, 2.5, 3.5], dcs: [1, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5] },
+  "SCD Probe V3": { nirs: [1, 1.5, 3, 4],   dcs: [1, 3, 3, 3, 3, 3, 3, 3] },
+  "IP Probe":     { nirs: [1, 2, 2.5, 3.5], dcs: [1, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5] },
+  "IP Probe V2":  { nirs: [1, 1.5, 3, 4], dcs: [1, 3, 3, 3, 3, 3, 3, 3]  },
 }
